@@ -11,7 +11,7 @@ import asyncio
 async def fetch_price(session, product_link):
     try:
         async with session.get(product_link) as response: 
-            return html_content
+            return await response.text()
     except Exception as e:
         print(f"Error fetching {product_link}: {e}")
         return None
@@ -73,8 +73,8 @@ async def extract_product_info(soup, product_name, website_name):
             product_link = parent_element.get("href")
 
             if product_link is not None and product_link.startswith(("http://", "https://")):
-                if i < len(html_contents) and html_contents[i] is not None:
-                    product_soup = BeautifulSoup(html_contents[i], "lxml")
+               if i < len(html_contents) and html_contents[i] is not None:
+                    product_soup = BeautifulSoup(await html_contents[i], "lxml")
                     price_pattern = r"\$\d+\.\d+|\£\d+|\d+\.\d+\s(?:USD|EUR)"
                     prices = re.findall(price_pattern, product_soup.text)
 
